@@ -6,6 +6,12 @@ ENV \
     DOTNET_CORE_VERSION=1.0 \
     HOME=/opt/app-root/src
 
+# Install the latest 'dumb-init' release from https://github.com/Yelp/dumb-init/releases
+RUN DUMBINIT_VERSION="1.2.0" && \
+    curl -SsL https://github.com/Yelp/dumb-init/releases/download/v${DUMBINIT_VERSION}/dumb-init_${DUMBINIT_VERSION}_amd64 > /usr/local/bin/dumb-init && \
+    chmod a+x /usr/local/bin/dumb-init
+ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+
 # Set the labels that are used for Openshift to describe the builder image.
 LABEL io.k8s.description="ASP.NET Core 1.0" \
     io.k8s.display-name="ASP.NET Core 1.0" \
@@ -34,5 +40,3 @@ USER 1001
 WORKDIR $HOME
 
 CMD ["/usr/libexec/s2i/usage"]
-
-
